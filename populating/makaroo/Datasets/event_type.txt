@@ -1,0 +1,13 @@
+﻿event_type_id,name
+1,Legal ball touches
+2,Pass attempts
+3,Direct free kicks
+4,Indirect free kicks
+5,Goal kicks
+6,Throw-ins
+7,Offside decisions
+8,Tackles
+9,Shots
+10,Corner kicks
+11,Foul
+12,Break
