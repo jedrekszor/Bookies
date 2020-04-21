@@ -14,7 +14,7 @@ constraint pk_history_games primary key (game_id),
 constraint fk_history_games_game_id foreign key (game_id) references games (game_id)
 );
 
-create or replace trigger trigg_insert_stadium_history
+create or replace trigger t_game_history_insert_stadium
 before insert on history_games
 for each row
 begin
