@@ -15,7 +15,7 @@ constraint fk_games_A_team_id foreign key (A_team_id) references teams (team_id)
 constraint fk_games_B_team_id foreign key (B_team_id) references teams (team_id)
 );
 
-create or replace trigger trigg_insert_match_set_stadium
+create or replace trigger t_game_insert_stadium
 before insert on games
 for each row
 begin
