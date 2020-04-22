@@ -142,7 +142,7 @@ create or replace package body calculations as
 end calculations;
 
 
-execute calculations.calculate_probability_B;
+execute calculations.calculate_odd_B;
 
 
 
