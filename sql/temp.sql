@@ -81,13 +81,13 @@ create or replace package body calculations as
 
   procedure calculate_stats
   is
-  v_team_A_id team_statistics.team_id%type;
-  v_team_B_id team_statistics.team_id%type;
-  v_competition_id team_statistics.competition_id%type;
-  v_current_A_stats team_statistics%rowtype;
-  v_current_B_stats team_statistics%rowtype;
-  cursor c_history_games is
-    select * from HISTORY_GAMES;
+    v_team_A_id team_statistics.team_id%type;
+    v_team_B_id team_statistics.team_id%type;
+    v_competition_id team_statistics.competition_id%type;
+    v_current_A_stats team_statistics%rowtype;
+    v_current_B_stats team_statistics%rowtype;
+    cursor c_history_games is
+      select * from HISTORY_GAMES;
   begin
     for record in c_history_games
     loop
@@ -144,9 +144,36 @@ end calculations;
 
 execute calculations.calculate_odd_B;
 
-
-
 set serveroutput on;
+
+
+
+
+procedure calculate_payouts(p_odd_id odds.odd_id%type)
+is
+  v_id number := 0;
+  v_final float := 0;
+  cursor c_bets is
+    select * from bets where odd_id = p_odd_id;
+begin
+  select coalesce(max(payout_id), 0)
+  into v_id from payouts;
+  for record in c_bets
+  loop
+    v_id := v_id + 1;
+    select o.value into v_final from odds o where o.odd_id = record.odd_id;
+    v_final := v_final * record.money_placed;
+    insert into payouts (v_id, v_final, sysdate + 1/24, record.client_id, record.bet_id);
+  end loop
+end calculate_payouts;
+
+
+
+
+
+
+
+
 
 
 
