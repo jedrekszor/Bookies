@@ -1,17 +1,17 @@
-import java.util.Date;
+package download;
 
 public class Match {
 
-    int round;
+    public int round;
 
-    String teamA;
-    String teamB;
+    public String teamA;
+    public String teamB;
 
-    Integer scoreA;
-    Integer scoreB;
+    public Integer scoreA;
+    public Integer scoreB;
 
-    String hour;
-    String matchDate;
+    public String hour;
+    public String matchDate;
 
     public Match(int round, String teamA, String teamB, Integer scoreA, Integer scoreB, String hour, String matchDate) {
         this.round = round;

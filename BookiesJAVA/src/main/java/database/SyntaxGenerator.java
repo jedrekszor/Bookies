@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OracleController {
+public class SyntaxGenerator {
 
     private static int currId = 1;
 

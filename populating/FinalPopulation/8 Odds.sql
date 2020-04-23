@@ -19,3 +19,13 @@ constraint fk_odds_game_id foreign key (game_id) references games (game_id),
 constraint fk_odds_odd_type_id foreign key (odd_type_id) references odd_type (odd_type_id)
 );
 
+create table history_odds(
+odd_id number not null,
+game_id number not null,
+odd_type_id number not null,
+value float not null,
+odd_date date,
+constraint pk_history_odds primary key (odd_id)
+);
+
+

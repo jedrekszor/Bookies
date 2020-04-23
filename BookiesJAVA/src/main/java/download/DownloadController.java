@@ -1,4 +1,5 @@
-import network.HtmlParser;
+package download;
+
 import network.HttpRequestFunctions;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -15,12 +16,43 @@ import java.util.regex.Pattern;
 
 public class DownloadController {
 
-    public static ArrayList<Match> getMatches(String link, int round) {
+    public static ArrayList<Match> getAllMatches() {
+        ArrayList<Match> matches = new ArrayList<>();
+        ArrayList<String> links = getAllLinks();
+        for (int i = 0; i < links.size(); i++) {
+            try {
+                matches.addAll(downloadMatchesFromLink(links.get(i), i + 1));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return matches;
+    }
 
-        DownloadController.DownloadSite(link, "files/site.html");
-        HtmlParser.parse("files/site.html");
+    //GETTING LINKS FROM FILE
 
-        Document html = Jsoup.parse(DownloadController.getCodeFromFile("files/site.html"));
+    private static ArrayList<String> getAllLinks() {
+        ArrayList<String> links = new ArrayList<>();
+
+        String filename = "files/rounds.txt";
+        File file = new File(filename);
+        String line;
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            while ((line = br.readLine()) != null) {
+                links.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return links;
+    }
+
+    //DOWNLOAD
+
+    private static ArrayList<Match> downloadMatchesFromLink(String link, int round) throws IOException {
+
+        Document html = Jsoup.connect(link).get();
         ArrayList<Match> matchStorage = new ArrayList<>();
 
         Elements matches = html.body().getElementsByClass("game-info");
@@ -31,21 +63,18 @@ public class DownloadController {
             Elements hours = match.getElementsByClass("game-data");
             Elements dates = match.getElementsByClass("game-ldate");
 
-            int tempScoreA = 0;
-            int tempScoreB = 0;
-
-
-            if(scores.get(0).text().equals("") || scores.get(1).text().equals("")){
-                matchStorage.add(new Match(round,
+            if (scores.get(0).text().equals("") || scores.get(1).text().equals("")) {
+                matchStorage.add(new Match(
+                        round,
                         teams.get(0).text(),
                         teams.get(1).text(),
                         null,
                         null,
                         DownloadController.ExtractDate(hours.get(0).text()),
                         DownloadController.FormatDate(dates.get(0).text())));
-            }
-            else {
-                matchStorage.add(new Match(round,
+            } else {
+                matchStorage.add(new Match(
+                        round,
                         teams.get(0).text(),
                         teams.get(1).text(),
                         Integer.parseInt(scores.get(0).text()),
@@ -57,28 +86,7 @@ public class DownloadController {
         return matchStorage;
     }
 
-    private static String getCodeFromFile(String filename) {
-        StringBuilder content_site = new StringBuilder();
-        File file = new File(filename);
-        String line;
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            while ((line = br.readLine()) != null) {
-                content_site.append(line).append("\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return content_site.toString();
-    }
-
-    private static void DownloadSite(String link, String filenameOut) {
-        try {
-            HttpRequestFunctions.httpRequest1(link, "", filenameOut);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    //FORMATS
 
     private static String ExtractDate(String date) {
         String output = "";
@@ -108,5 +116,30 @@ public class DownloadController {
             }
         }
         return output.toString();
+    }
+
+    //OTHER
+
+    private static void DownloadSite(String link, String filenameOut) {
+        try {
+            HttpRequestFunctions.httpRequest1(link, "", filenameOut);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static String getCodeFromFile(String filename) {
+        StringBuilder content_site = new StringBuilder();
+        File file = new File(filename);
+        String line;
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            while ((line = br.readLine()) != null) {
+                content_site.append(line).append("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return content_site.toString();
     }
 }
