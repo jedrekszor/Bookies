@@ -33,6 +33,8 @@ from(
           
   from games g
 --  get following games
+
+--IT WILL NOT PRODUCE OUTPUT BECAUSE THERE IS NO GAME PLANNED AFTER TODAY'S DATE
   where g.match_date > sysdate
   order by g.match_date
   )

@@ -1,7 +1,6 @@
 alter SESSION set NLS_TIMESTAMP_FORMAT = 'dd/mm/yyyy HH24:MI';
 alter SESSION set NLS_DATE_FORMAT = 'dd/mm/yyyy';
 
-drop table games;
 create table games(
 game_id number not null,
 phase_id number not null,

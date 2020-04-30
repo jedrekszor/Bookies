@@ -6,8 +6,6 @@
 --DataJogo equipaVisitada equipaVisitante TotalApostado totalPremios
 ----------- -------------- --------------- -------------- ------------
 
-create or replace view view_b as
-
 select match_date, 
        A_team_id,
        B_team_id,
@@ -15,13 +13,13 @@ select match_date,
        payouts_sums.sum_payouts
        
        
-from games g,
+from history_games g,
   (
 --    get games_id with the total money bet on that game
     select o.game_id as o_game_id, 
            round(sum(b.money_placed),2) as sum_bets
-    from odds o
-    left outer join bets b on o.odd_id = b.odd_id     
+    from history_odds o
+    join bets b on o.odd_id = b.odd_id     
     group by o.game_id
     order by o.game_id desc
   ) odds_sums,
@@ -30,9 +28,9 @@ from games g,
 --    get games_id with the total prizes paid for that game
     select o.game_id as o_game_id, 
            round(sum(p.money),2) as sum_payouts
-    from odds o
-    left outer join bets b on o.odd_id = b.odd_id  
-    left outer join payouts p on b.bet_id = p.bet_id
+    from history_odds o
+    join bets b on o.odd_id = b.odd_id  
+    join payouts p on b.bet_id = p.bet_id
     group by o.game_id
   ) payouts_sums
 
@@ -44,7 +42,10 @@ where g.game_id = odds_sums.o_game_id and
       odds_sums.sum_bets is not null and
       payouts_sums.sum_payouts is not null and
       
---      select only those matches with the latest match_date
-      match_date = (
-                    select max(match_date)
-                    from games);
+--      select only those matches with the latest match_date but only 
+--      with that which have a payouts
+      phase_id = (  select max(phase_id)
+                    from history_games g
+                    join history_odds o on o.game_id = g.game_id
+                    join bets b on b.odd_id = o.odd_id 
+                    join payouts p on p.bet_id = b.bet_id);

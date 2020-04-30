@@ -1,32 +1,10 @@
 alter SESSION set NLS_TIMESTAMP_FORMAT = 'dd/mm/yyyy HH24:MI';
 alter SESSION set NLS_DATE_FORMAT = 'dd/mm/yyyy';
 
-drop table phases;
-drop table competitions;
-
-create table competitions(
-competition_id varchar(20),
-name varchar(30),
-sport varchar(30),
-country varchar(30),
-season varchar(30),
-start_date date,
-end_date date,
-constraint pk_competitions primary key (competition_id)
-);
-
+--COMPTETITIONS
 insert into competitions values('LN','Liga NOS','Football','Portugal','2019/20','09/08/2019','17/05/2020');
 
-create table phases(
-phase_id number not null,
-competition_id varchar(20) not null,
-phase_name varchar(30) not null,
-start_date date not null,
-end_date date not null,
-constraint pk_phases primary key (phase_id),
-constraint fk_phases_competition_id foreign key (competition_id) references competitions (competition_id)
-);
-
+--PHASES
 insert into phases values(1, 'LN', 'Round 1', '09/08/2019', '08/09/2019');
 insert into phases values(2, 'LN', 'Round 2', '16/08/2019', '19/08/2019');
 insert into phases values(3, 'LN', 'Round 3', '23/08/2019', '25/08/2019');

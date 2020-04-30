@@ -23,7 +23,7 @@ constraint fk_team_stats_competition_id foreign key (competition_id) references 
 );
 
 create table probability_A(
-prob_A_id varchar(20) not null,
+prob_A_id number not null,
 A_team_id varchar(10) not null,
 B_team_id varchar(10) not null,
 A_win_chance float not null,
@@ -39,7 +39,7 @@ B_team_id varchar(10) not null,
 A_win_chance float not null,
 draw_chance float not null,
 B_win_chance float not null,
-prob_A_id varchar(20) not null,
+prob_A_id number not null,
 constraint pk_prob_B_id primary key (A_team_id, B_team_id),
 constraint fk_prob_B_prob_A_id foreign key (prob_A_id) references probability_A (prob_A_id)
 );
